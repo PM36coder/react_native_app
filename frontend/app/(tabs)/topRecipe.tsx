@@ -75,7 +75,7 @@ const TopRecipe = () => {
             <View style={{flexDirection:"row", justifyContent:'center', alignItems:'center' , gap:10}}>
             <Text>Pravesh</Text>
 
-            <Ionicons name='add-circle' color={"#afafa"} size={30}/>
+            <Ionicons name='add-circle' color={"#afafa"} size={30} onPress={()=>router.push('/createRecipe')}/>
             </View>:null}</Text>:<Pressable onPress={() => router.push("/login/login")}>
               <Text style={styles.btnText}>Login</Text>
             </Pressable>}

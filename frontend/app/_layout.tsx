@@ -6,16 +6,28 @@ function ProtectedStack() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(auth)/login/login" />
-      <Stack.Screen name="(auth)/signup/signup" />
+      {/* Public routes */}
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
 
-      {/* Protected Routes */}
-      {token && (
+      {/* Protected routes */}
+      {token ? (
         <>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="createRecipe" options={{presentation:'modal'}}/>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen 
+        name="createRecipe" 
+        options={{ 
+          presentation: 'modal',        // Modal style
+          headerShown: true,
+          headerTitle: 'Create Recipe',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold'
+          }
+        }} 
+      />
         </>
+      ) : (
+        <Stack.Screen name="index" />
       )}
     </Stack>
   );
