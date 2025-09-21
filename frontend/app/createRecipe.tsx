@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { API } from '@/axios';
+import { useAuth } from '@/context/contextApi';
 
 
 
@@ -23,20 +24,28 @@ export default function CreateRecipe() {
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const [image, setImage] = useState('');
-
+const { token } = useAuth();
   const handleSave = async () => {
     if (!recipeName.trim() || !ingredients.trim() || !instructions.trim()) {
       Alert.alert('Error', 'All fields are required');
       return;
     }
 
-    try {
-      const res = await API.post('/recipe/upload-recipe', {
-        title: recipeName,
-        ingredients,
-        instructions,
-        image: image || null
-      });
+     try {
+      const res = await API.post(
+        '/recipe/upload-recipe',
+        {
+          title: recipeName,
+          ingredients: ingredients.split("\n"), 
+          instructions,
+          image: image || null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,  
+          },
+        }
+      );
 
       Alert.alert('Success', 'Recipe saved successfully!', [
         { text: 'OK', onPress: () => router.back() }
@@ -135,6 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+    marginTop:30
   },
   closeButton: {
     fontSize: 24,
