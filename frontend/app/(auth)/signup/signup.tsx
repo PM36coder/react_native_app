@@ -40,7 +40,7 @@ const SignUp = () => {
         return;
       }
 
-      const res = await fetch('http://192.168.31.254:3000/api/user/register', {
+      const res = await fetch('http://192.168.31.193:3000/api/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

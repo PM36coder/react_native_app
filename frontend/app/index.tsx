@@ -43,7 +43,7 @@ export default function App() {
   const getAllRecipes = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://192.168.31.254:3000/api/recipe")
+      const res = await fetch("http://192.168.31.193:3000/api/recipe")
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -128,6 +128,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
+    marginTop:20,
     flex: 1,
   },
   center: {

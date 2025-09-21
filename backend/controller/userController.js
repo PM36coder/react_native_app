@@ -1,4 +1,5 @@
 import { User } from "../Models/userSchema.js";
+import Recipe from "../Models/Recipe.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const userRegister = async (req,res)=>{
@@ -43,7 +44,7 @@ const userLogin = async (req,res)=>{
 
         const isMatch = await bcrypt.compare(password,user.password)
         if(!isMatch){
-            res.status(400).json({message : "Invalid Credentials"})
+          return  res.status(400).json({message : "Invalid Credentials"})
         }
 
         user.password = undefined
@@ -57,5 +58,8 @@ const userLogin = async (req,res)=>{
         res.status(500).json({message : "server error"})
     }
 }
+
+
+
 
 export {userRegister,userLogin}

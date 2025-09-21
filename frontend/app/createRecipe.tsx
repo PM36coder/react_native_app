@@ -8,82 +8,116 @@ import {
   ScrollView, 
   TextInput,
   Pressable,
-  Alert
+  Alert,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { router } from 'expo-router';
+import { API } from '@/axios';
+
+
+
 
 export default function CreateRecipe() {
   const [recipeName, setRecipeName] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
+  const [image, setImage] = useState('');
 
-  const handleSave = () => {
-    if (!recipeName.trim()) {
-      Alert.alert('Error', 'Please enter recipe name');
+  const handleSave = async () => {
+    if (!recipeName.trim() || !ingredients.trim() || !instructions.trim()) {
+      Alert.alert('Error', 'All fields are required');
       return;
     }
-    
-    // Save logic यहाँ add करें
-    Alert.alert('Success', 'Recipe saved successfully!', [
-      { text: 'OK', onPress: () => router.back() }
-    ]);
+
+    try {
+      const res = await API.post('/recipe/upload-recipe', {
+        title: recipeName,
+        ingredients,
+        instructions,
+        image: image || null
+      });
+
+      Alert.alert('Success', 'Recipe saved successfully!', [
+        { text: 'OK', onPress: () => router.back() }
+      ]);
+    } catch (error: any) {
+      console.log(error.response?.data || error.message);
+      Alert.alert('Error', error.response?.data?.message || 'Something went wrong');
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with Close button */}
-      <View style={styles.header}>
-        <Pressable onPress={() => router.back()}>
-          <Text style={styles.closeButton}>✕</Text>
-        </Pressable>
-        <Text style={styles.headerTitle}>New Recipe</Text>
-        <Pressable onPress={handleSave}>
-          <Text style={styles.saveButton}>Save</Text>
-        </Pressable>
-      </View>
-
-      {/* Form Content */}
-      <ScrollView style={styles.content}>
-        <View style={styles.section}>
-          <Text style={styles.label}>Recipe Name *</Text>
-          <TextInput
-            style={styles.input}
-            value={recipeName}
-            onChangeText={setRecipeName}
-            placeholder="Enter recipe name"
-            placeholderTextColor="#999"
-          />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <SafeAreaView style={styles.container}>
+        {/* Header with Close + Save */}
+        <View style={styles.header}>
+          <Pressable onPress={() => router.back()}>
+            <Text style={styles.closeButton}>✕</Text>
+          </Pressable>
+          <Text style={styles.headerTitle}>New Recipe</Text>
+          <Pressable onPress={handleSave}>
+            <Text style={styles.saveButton}>Save</Text>
+          </Pressable>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.label}>Ingredients</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            value={ingredients}
-            onChangeText={setIngredients}
-            placeholder="List your ingredients..."
-            placeholderTextColor="#999"
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-          />
-        </View>
+        {/* Form Content */}
+        <ScrollView style={styles.content}>
+          <View style={styles.section}>
+            <Text style={styles.label}>Recipe Name *</Text>
+            <TextInput
+              style={styles.input}
+              value={recipeName}
+              onChangeText={setRecipeName}
+              placeholder="Enter recipe name"
+              placeholderTextColor="#999"
+            />
+          </View>
 
-        <View style={styles.section}>
-          <Text style={styles.label}>Instructions</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            value={instructions}
-            onChangeText={setInstructions}
-            placeholder="Write cooking instructions..."
-            placeholderTextColor="#999"
-            multiline
-            numberOfLines={6}
-            textAlignVertical="top"
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          <View style={styles.section}>
+            <Text style={styles.label}>Ingredients *</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={ingredients}
+              onChangeText={setIngredients}
+              placeholder="List your ingredients..."
+              placeholderTextColor="#999"
+              multiline
+              numberOfLines={8}
+              textAlignVertical="top"
+            />
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.label}>Instructions *</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={instructions}
+              onChangeText={setInstructions}
+              placeholder="Write cooking instructions..."
+              placeholderTextColor="#999"
+              multiline
+              numberOfLines={6}
+              textAlignVertical="top"
+            />
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.label}>Image URL</Text>
+            <TextInput
+              style={styles.input}
+              value={image}
+              onChangeText={setImage}
+              placeholder="Enter image URL"
+              placeholderTextColor="#999"
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

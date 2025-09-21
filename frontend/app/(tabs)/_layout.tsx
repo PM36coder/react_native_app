@@ -1,7 +1,6 @@
-import { Tabs,Redirect } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/context/contextApi";
-
 
 export default function TabLayout() {
   const { user } = useAuth();
@@ -9,7 +8,11 @@ export default function TabLayout() {
   if (!user) return <Redirect href="/(auth)/login/login" />;
 
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,  // 👈 sab tabs ke liye header gayab
+      }}
+    >
       <Tabs.Screen
         name="topRecipe"
         options={{

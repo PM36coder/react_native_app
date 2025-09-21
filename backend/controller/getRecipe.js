@@ -1,5 +1,5 @@
 // controller/getRecipe.js
-import e from "express";
+
 import Recipe from "../Models/Recipe.js";
 
 const getAllRecipe = async (req, res) => {
@@ -28,7 +28,8 @@ const uploadRecipe = async(req,res)=>{
     title,
     ingredients,
     instructions,
-    image: image || null
+    image: image || null,
+    user: req.user.id
   })
 
   res.status(201).json({message:"Recipe Uploaded" , newRecipe})
@@ -38,7 +39,32 @@ const uploadRecipe = async(req,res)=>{
   }
 }
 
+const getRecipeByUserId = async(req,res)=>{
+    const id = req.user.id
+    try {
+        
+        const recipes = await Recipe.find({user : id})
+         if (!recipes.length) {
+      return res.status(404).json({ message: "No recipes posted" });
+    }
+     res.status(200).json({ recipes });
+     
+    } catch (error) {
+        console.log("error" , error)
+        res.status(500).json({message: "server error"})
+    }
+}
+ const getRecipeById = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    res.json(recipe);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 
-
-export { getAllRecipe ,uploadRecipe};
+export { getAllRecipe ,uploadRecipe,getRecipeByUserId,getRecipeById};
