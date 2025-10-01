@@ -20,7 +20,7 @@ type LoginData = {
 const Login = () => {
   const router = useRouter();
   const [login, setLogin] = useState<LoginData>({ email: "", password: "" });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const {Login} = useAuth()
   const handleSubmit = async () => {
     if (!login.email || !login.password) {
